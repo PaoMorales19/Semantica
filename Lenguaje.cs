@@ -13,6 +13,7 @@ namespace Semantica
     {
         List<Variable> variables = new List<Variable>();
         Stack<float> stack = new Stack<float>();
+        Variable.TipoDato Dominante;
         public Lenguaje()
         {
 
@@ -219,6 +220,10 @@ namespace Semantica
         }
         private Variable.TipoDato evaluaNumero(float resultado)
         {
+            if (resultado % 1 != 0)
+            {
+                return Variable.TipoDato.Float;
+            }
             if (resultado <= 255)
             {
                 return Variable.TipoDato.Char;
@@ -239,21 +244,34 @@ namespace Semantica
         private void Asignacion()
         {
             string nombre = getContenido();
-            //Requerimiento 2---->si no existe la variable levantamos la excepcion
-            if (!existeVariable(getContenido()))
+            if (!existeVariable(getContenido()))//Requerimiento 2---->si no existe la variable levantamos la excepcion
             {
                 throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
             }
             log.WriteLine();
             log.Write(getContenido() + " = ");
-
             match(Tipos.Identificador);
             match(Tipos.Asignacion);
+            Dominante = Variable.TipoDato.Char;
             Expresion();
             match(";");
             float resultado = stack.Pop();
             log.Write(" = " + resultado);
             log.WriteLine();
+            Console.WriteLine(Dominante);
+            Console.WriteLine(evaluaNumero(resultado));
+            if (Dominante < evaluaNumero(resultado))
+            {
+                Dominante = evaluaNumero(resultado);
+            }
+            if (evaluaNumero(resultado) <= getTipo(nombre))
+            {
+                modVariable(nombre, resultado);
+            }
+            else
+            {
+                throw new Error("Error de semantica: no podemos asignar un: <" + Dominante + "> a un <" + getTipo(nombre) + "> en linea  " + linea, log);
+            }
             modVariable(nombre, resultado);
         }
 
@@ -536,13 +554,16 @@ namespace Semantica
             if (getClasificacion() == Tipos.Numero)
             {
                 log.Write(getContenido() + " ");
+                if (Dominante < evaluaNumero(float.Parse(getContenido())))
+                {
+                    Dominante = evaluaNumero(float.Parse(getContenido()));
+                }
                 stack.Push(float.Parse(getContenido()));
                 match(Tipos.Numero);
             }
             else if (getClasificacion() == Tipos.Identificador)
             {
-                //Requerimiento 2---->si no existe la variable levantamos la excepcion
-                if (!existeVariable(getContenido()))
+                if (!existeVariable(getContenido()))//Requerimiento 2---->si no existe la variable levantamos la excepcion
                 {
                     throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
                 }
