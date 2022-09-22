@@ -1,11 +1,9 @@
 using System;
 
-//Requerimiento 1: Eliminar las doble comillas del printf e interpretar las secuencias de escape. listo
-//               dentro de la cadena
-//Requerimiento 2: Marcar los errores sintacticos cuando la variable no exista.---listo
-//Requerimiento 3: Modificar el valor de la variable en la asignacion
-//Requerimiento 4: Obtener el valor de la variable cuando se requiera y programar el mètodo getValor
-//Requerimiento 5: Modificar el valor de la variable en el scanf--listo
+//Requerimiento 1: Actualizar el dominante para variables en la expresion (solo lo hicimos con numeros)
+//                 Ejemplo: float x; char y; char y; y=x;
+//Requerimiento 2: Actualizar el dominante para el casteo y el valor de la sub expresión
+//
 
 namespace Semantica
 {
@@ -258,13 +256,11 @@ namespace Semantica
             float resultado = stack.Pop();
             log.Write(" = " + resultado);
             log.WriteLine();
-            Console.WriteLine(Dominante);
-            Console.WriteLine(evaluaNumero(resultado));
             if (Dominante < evaluaNumero(resultado))
             {
                 Dominante = evaluaNumero(resultado);
             }
-            if (evaluaNumero(resultado) <= getTipo(nombre))
+            if (Dominante <= getTipo(nombre))
             {
                 modVariable(nombre, resultado);
             }
@@ -568,14 +564,40 @@ namespace Semantica
                     throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
                 }
                 log.Write(getContenido() + " ");
+                //Requerimiento 1
                 stack.Push(getValor((getContenido())));
                 match(Tipos.Identificador);
             }
             else
             {
+                bool huboCasteo = false;
+                Variable.TipoDato casteo = Variable.TipoDato.Char;
                 match("(");
+                if (getClasificacion() != Tipos.TipoDato)
+                {
+                    huboCasteo = true;
+                    switch (getContenido())
+                    {
+                        case "char":
+                            casteo = Variable.TipoDato.Char;
+                            break;
+                        case "int":
+                            casteo = Variable.TipoDato.Int;
+                            break;
+                        case "float":
+                            casteo = Variable.TipoDato.Float;
+                            break;
+                    }
+                    match(Tipos.TipoDato);
+                    match(")");
+                    match("(");
+                }
                 Expresion();
                 match(")");
+                if (huboCasteo)
+                {
+                    //Requerimiento 2
+                }
             }
         }
     }
