@@ -1,5 +1,5 @@
 using System;
-
+//Ana Paola Morales Anaya
 namespace Semantica
 {
     public class Sintaxis : Lexico

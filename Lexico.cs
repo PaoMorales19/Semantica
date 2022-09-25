@@ -1,5 +1,5 @@
 using System.IO;
-
+//Ana Paola Morales Anaya
 namespace Semantica
 {
     public class Lexico : Token
