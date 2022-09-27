@@ -6,7 +6,8 @@ using System;
 //Requerimiento 3: Programar un método de conversiòn de un valor a un tipo de dato
 //                 Private float convert(float valor, string TipoDato)
 //                 Deberan usar el residuo de la division %255, %65535
-
+//Requerimeinto 4: Evaluar nuevamente la condicion del if, while, for, do while con respecto al parametro que recive
+//Requerimiento 5: Levantar una excepcion cuando la captura no se número en el scanf
 namespace Semantica
 {
     public class Lenguaje : Sintaxis
@@ -151,6 +152,16 @@ namespace Semantica
                 Lista_identificadores(tipo);
             }
         }
+        //Main      -> void main() Bloque de instrucciones
+        private void Main()
+        {
+            match("void");
+            match("main");
+            match("(");
+            match(")");
+            BloqueInstrucciones(true);
+        }
+
         //Bloque de instrucciones -> {lista de intrucciones?}
         private void BloqueInstrucciones(bool evaluacion)
         {
@@ -281,7 +292,8 @@ namespace Semantica
         {
             match("while");
             match("(");
-            Condicion();
+            bool ValidarWhile = Condicion();
+            //Requerimiento 4
             match(")");
             if (getContenido() == "{")
             {
@@ -307,7 +319,8 @@ namespace Semantica
             }
             match("while");
             match("(");
-            Condicion();
+            //Requerimeinto 4
+            bool ValidarDo = Condicion();
             match(")");
             match(";");
         }
@@ -317,7 +330,8 @@ namespace Semantica
             match("for");
             match("(");
             Asignacion(evaluacion);
-            Condicion();
+            //Requerimiento 4
+            bool ValidarFor = Condicion();
             match(";");
             Incremento(evaluacion);
             match(")");
@@ -335,7 +349,6 @@ namespace Semantica
         private void Incremento(bool evaluacion)
         {
             string variable = getContenido();
-            //Requerimiento 2---->si no existe la variable levantamos la excepcion
             if (!existeVariable(getContenido()))
             {
                 throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
@@ -384,7 +397,6 @@ namespace Semantica
             }
             match("}");
         }
-
         //ListaDeCasos -> case Expresion: listaInstruccionesCase (break;)? (ListaDeCasos)?
         private void ListaDeCasos(bool evaluacion)
         {
@@ -435,6 +447,7 @@ namespace Semantica
         {
             match("if");
             match("(");
+            //Requerimiento 4
             bool validarIf = Condicion();
             match(")");
             if (getContenido() == "{")
@@ -467,7 +480,6 @@ namespace Semantica
             match("(");
             if (getClasificacion() == Tipos.Cadena)
             {
-                //Requerimirnto 1
                 if (evaluacion)
                 {
                     string cadena;
@@ -482,7 +494,7 @@ namespace Semantica
                 float resultado = stack.Pop();
                 if (evaluacion)
                 {
-                    Console.Write(stack.Pop());
+                    Console.Write(resultado);
                 }
             }
             match(")");
@@ -497,29 +509,21 @@ namespace Semantica
             match(Tipos.Cadena);
             match(",");
             match("&");
-            //Requerimiento 2 - Si no existe la variable levanta la excepcion 
             if (!existeVariable(getContenido()))
             {
                 throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
             }
-            string val = "" + Console.ReadLine();
-            //Requerimiento 5: Modificar el valor de la variable
-            modVariable(getContenido(), float.Parse(val));
+            //string nombreVariable = getContenido();
             match(Tipos.Identificador);
+            if (evaluacion)
+            {
+                string val = "" + Console.ReadLine();
+                //Requerimiento 5
+                modVariable(getContenido(), float.Parse(val));
+            }
             match(")");
             match(";");
         }
-
-        //Main      -> void main() Bloque de instrucciones
-        private void Main()
-        {
-            match("void");
-            match("main");
-            match("(");
-            match(")");
-            BloqueInstrucciones(true);
-        }
-
         //Expresion -> Termino MasTermino
         private void Expresion()
         {
