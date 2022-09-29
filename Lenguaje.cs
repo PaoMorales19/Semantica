@@ -8,6 +8,7 @@ using System;
 //                 Deberan usar el residuo de la division %255, %65535
 //Requerimeinto 4: Evaluar nuevamente la condicion del if, while, for, do while con respecto al parametro que recive
 //Requerimiento 5: Levantar una excepcion cuando la captura no se número en el scanf
+//Requerimiento 6: Ejecutar el For(); 
 namespace Semantica
 {
     public class Lenguaje : Sintaxis
@@ -331,18 +332,28 @@ namespace Semantica
             match("(");
             Asignacion(evaluacion);
             //Requerimiento 4
+            //Requerimiento 6
+            //a) Ncecesito guardar la posicion del archivo en el texto 
             bool ValidarFor = Condicion();
-            match(";");
-            Incremento(evaluacion);
-            match(")");
-            if (getContenido() == "{")
-            {
-                BloqueInstrucciones(evaluacion);
-            }
-            else
-            {
-                Instruccion(evaluacion);
-            }
+            //b) Metemos un ciclo while
+            //while()
+            //{
+                match(";");
+                Incremento(evaluacion);
+                match(")");
+                if (getContenido() == "{")
+                {
+                    BloqueInstrucciones(evaluacion);
+                }
+                else
+                {
+                    Instruccion(evaluacion);
+                }
+            //c)Regresar a la posición de lectura del archivo
+            //d) Sacar otro token 
+
+            
+            //}
         }
 
         //Incremento -> Identificador ++ | --
@@ -396,7 +407,7 @@ namespace Semantica
                 }
             }
             match("}");
-        }
+        }//
         //ListaDeCasos -> case Expresion: listaInstruccionesCase (break;)? (ListaDeCasos)?
         private void ListaDeCasos(bool evaluacion)
         {
@@ -461,6 +472,7 @@ namespace Semantica
             if (getContenido() == "else")
             {
                 match("else");
+                //Requerimiento 4, cambiar el valor de validar
                 if (getContenido() == "{")
                 {
                     BloqueInstrucciones(validarIf);
@@ -597,13 +609,17 @@ namespace Semantica
             }
             else if (getClasificacion() == Tipos.Identificador)
             {
-                if (!existeVariable(getContenido()))//Requerimiento 2---->si no existe la variable levantamos la excepcion
+                if (!existeVariable(getContenido()))
                 {
                     throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
                 }
                 log.Write(getContenido() + " ");
                 //Requerimiento 1
-                stack.Push(getValor((getContenido())));
+                if(Dominante < getTipo(getContenido()))//
+                {
+                    Dominante = getTipo(getContenido());//
+                }
+                stack.Push(getValor((getContenido())));//
                 match(Tipos.Identificador);
             }
             else
