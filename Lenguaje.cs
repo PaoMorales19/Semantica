@@ -256,7 +256,7 @@ namespace Semantica
         private void Asignacion(bool evaluacion)
         {
             string nombre = getContenido();
-            if (!existeVariable(getContenido()))//Requerimiento 2---->si no existe la variable levantamos la excepcion
+            if (!existeVariable(getContenido()))
             {
                 throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
             }
@@ -338,21 +338,21 @@ namespace Semantica
             //b) Metemos un ciclo while
             //while()
             //{
-                match(";");
-                Incremento(evaluacion);
-                match(")");
-                if (getContenido() == "{")
-                {
-                    BloqueInstrucciones(evaluacion);
-                }
-                else
-                {
-                    Instruccion(evaluacion);
-                }
+            match(";");
+            Incremento(evaluacion);
+            match(")");
+            if (getContenido() == "{")
+            {
+                BloqueInstrucciones(evaluacion);
+            }
+            else
+            {
+                Instruccion(evaluacion);
+            }
             //c)Regresar a la posición de lectura del archivo
             //d) Sacar otro token 
 
-            
+
             //}
         }
 
@@ -594,6 +594,18 @@ namespace Semantica
                 }
             }
         }
+        private float ValorCasteado(float N1, Variable.TipoDato casteo)
+        {
+            if (casteo == Variable.TipoDato.Char)
+            {
+                return N1 % 255; //tipo char
+            }
+            else if (casteo == Variable.TipoDato.Int)
+            {
+                return N1 % 65535;     //entero
+            }
+            return N1; // en caso del flotante
+        }
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
@@ -615,7 +627,7 @@ namespace Semantica
                 }
                 log.Write(getContenido() + " ");
                 //Requerimiento 1
-                if(Dominante < getTipo(getContenido()))//
+                if (Dominante < getTipo(getContenido()))//
                 {
                     Dominante = getTipo(getContenido());//
                 }
