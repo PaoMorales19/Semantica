@@ -458,8 +458,12 @@ namespace Semantica
         {
             match("if");
             match("(");
-            //Requerimiento 4
             bool validarIf = Condicion();
+            if (evaluacion == false)//Requerimiento 4
+            {
+                validarIf = false;//
+            }
+
             match(")");
             if (getContenido() == "{")
             {
@@ -469,10 +473,15 @@ namespace Semantica
             {
                 Instruccion(validarIf);
             }
+            if (evaluacion == false)//
+            {
+                validarIf = true;//
+            }
             if (getContenido() == "else")
             {
                 match("else");
                 //Requerimiento 4, cambiar el valor de validar
+
                 if (getContenido() == "{")
                 {
                     BloqueInstrucciones(validarIf);
@@ -668,6 +677,9 @@ namespace Semantica
                     //Requerimiento 3(poner método)
                     //Ejemplo si el casteo es (char) y el pop regresa un 256
                     //el valor equivalente en casteo es 0
+                    float N1 = stack.Pop();
+                    stack.Push(ValorCasteado(N1, casteo)); // desarrollar el metodo**
+                    Dominante = casteo;
 
                 }
             }

@@ -1,5 +1,16 @@
 Archivo: prueba.cpp
-29/09/2022 09:49:04 a. m.
-
-y = x  = 0
-Error de semantica: no podemos asignar un: <Float> a un <Char> en linea  13
+30/09/2022 09:52:15 a. m.
+3 5 + 10 
+i = 0  = 0
+i 10 
+Variables: 
+area Float 0
+radio Float 0
+pi Float 0
+resultado Float 0
+a Int 0
+d Int 0
+x Float 0
+y Char 0
+i Int 1
+m Int 0
