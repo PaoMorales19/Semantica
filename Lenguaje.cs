@@ -43,7 +43,7 @@ namespace Semantica
             {
                 if (v.getNombre().Equals(nombre))
                 {
-                    return true; ;
+                    return true;
                 }
             }
             return false;
@@ -534,13 +534,22 @@ namespace Semantica
             {
                 throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
             }
-            //string nombreVariable = getContenido();
+            string nombreVariable = getContenido();
             match(Tipos.Identificador);
             if (evaluacion)
             {
                 string val = "" + Console.ReadLine();
                 //Requerimiento 5
-                modVariable(getContenido(), float.Parse(val));
+                try
+                {
+                    float val2 = float.Parse(val);
+                    modVariable(nombreVariable, val2);
+                }
+                catch(Exception)
+                {
+                    throw new Error("Error de Sintaxis, no se puede asignat <" + getContenido()+ "> en la linea " + linea, log);
+                }
+
             }
             match(")");
             match(";");
