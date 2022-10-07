@@ -1,11 +1,19 @@
 Archivo: prueba.cpp
-05/10/2022 09:32:31 a. m.
-3 5 + 10 1 1 
-Variables: 
-area Float 0
-radio Float 0
-pi Float 0
-resultado Float 0
-x Char 0
-a Int 0
-d Int 7
+06/10/2022 08:55:15 p. m.
+altura 2 
+i = altura  = 5
+i 0 
+j = 0  = 0
+j altura i - j 2 j altura i - j 2 i 0 
+j = 0  = 0
+j altura i - j 2 j altura i - j 2 j altura i - j 2 i 0 
+j = 0  = 0
+j altura i - j 2 j altura i - j 2 j altura i - j 2 j altura i - j 2 i 0 
+j = 0  = 0
+j altura i - j 2 j altura i - j 2 j altura i - j 2 j altura i - j 2 j altura i - j 2 i 0 
+j = 0  = 0
+j altura i - j 2 j altura i - j 2 j altura i - j 2 j altura i - j 2 j altura i - j 2 j altura i - j 2 i 0 
+j = 0  = 0
+j altura i - j 2 1 1 2 2 
+a = 256  = 256
+Error de semantica: no podemos asignar un: <Float> a un <Int> en linea  38
