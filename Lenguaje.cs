@@ -236,11 +236,11 @@ namespace Semantica
             {
                 return Variable.TipoDato.Float;
             }
-            if (resultado <= 255)
+            if (resultado <= 256)
             {
                 return Variable.TipoDato.Char;
             }
-            else if (resultado == 65535)
+            else if (resultado == 65536)
             {
                 return Variable.TipoDato.Int;
             }
@@ -270,7 +270,7 @@ namespace Semantica
             float resultado = stack.Pop();
             log.Write(" = " + resultado);
             log.WriteLine();
-            if (Dominante < evaluaNumero(resultado))
+            if (Dominante < evaluaNumero(resultado))        
             {
                 Dominante = evaluaNumero(resultado);
             }
@@ -734,15 +734,16 @@ namespace Semantica
                 {
                     //Requerimiento 2
                     //Saco un elemento del stack
-                    //Convierto ese valor al equivalente en casteo
+                    float N1;
+                    N1 = stack.Pop();
                     //Requerimiento 3(poner método)
+                    stack.Push(ValorCasteado(N1, casteo)); // desarrollar el metodo**
+                    //Convierto ese valor al equivalente en casteo
+                    Dominante = casteo;
                     //Ejemplo si el casteo es (char) y el pop regresa un 256
                     //el valor equivalente en casteo es 0
-                    float N1 = stack.Pop();
-
-                    stack.Push(ValorCasteado(N1, casteo)); // desarrollar el metodo**
-                    //ValorCasteado(N1, casteo);
-                    Dominante = casteo;
+                    
+                    
 
                 }
             }
