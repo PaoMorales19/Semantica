@@ -270,7 +270,7 @@ namespace Semantica
             float resultado = stack.Pop();
             log.Write(" = " + resultado);
             log.WriteLine();
-            if (Dominante < evaluaNumero(resultado))        
+            if (Dominante < evaluaNumero(resultado))
             {
                 Dominante = evaluaNumero(resultado);
             }
@@ -349,6 +349,36 @@ namespace Semantica
             match(")");
             match(";");
         }
+        private float IncrementoDelFor(bool evaluacion)
+        {
+            string variable = getContenido();
+            if (!existeVariable(getContenido()))
+            {
+                throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
+            }
+            match(Tipos.Identificador);
+            if (getContenido() == "++")//le puse un +
+            {
+                match("++");
+                if (evaluacion)
+                {
+                    //modVariable(variable, getValor(variable) + 1);
+                    return getValor(variable) + 1;
+                }
+            }
+            else if (getContenido() == "--")
+            {
+                match("--");
+                if (evaluacion)
+                {
+                    //modVariable(variable, getValor(variable) - 1);
+                     return getValor(variable) - 1;
+                }
+                
+            }
+            return 0;
+        }
+
         //For -> for(Asignacion Condicion; Incremento) BloqueInstruccones | Intruccion 
         private void For(bool evaluacion)
         {
@@ -373,7 +403,9 @@ namespace Semantica
                     ValidarFor = false;
                 }
                 match(";");
-                Incremento(evaluacion);
+                string nIncremento = getContenido();
+                float incremento = IncrementoDelFor(ValidarFor);
+                //Incremento(evaluacion);
                 match(")");
                 if (getContenido() == "{")
                 {
@@ -383,12 +415,13 @@ namespace Semantica
                 {
                     Instruccion(ValidarFor);
                 }
-                if(ValidarFor)
+                if (ValidarFor)
                 {
                     posicion = posicion2 - tamano;
                     linea = lineaG;
                     setPosicion(posicion);
                     NextToken();
+                    modVariable(nIncremento, incremento);
                 }
             } while (ValidarFor);
         }
@@ -412,6 +445,7 @@ namespace Semantica
                 if (evaluacion)
                 {
                     modVariable(variable, getValor(variable) + 1);
+                    //return getValor(variable) + 1;
                 }
             }
             else if (getContenido() == "--")
@@ -587,7 +621,7 @@ namespace Semantica
             }
             string nombreVariable = getContenido();
 
-            if (evaluacion)
+            if (evaluacion == true)
             {
                 string val = "" + Console.ReadLine();
                 //Requerimiento 5
@@ -742,8 +776,8 @@ namespace Semantica
                     Dominante = casteo;
                     //Ejemplo si el casteo es (char) y el pop regresa un 256
                     //el valor equivalente en casteo es 0
-                    
-                    
+
+
 
                 }
             }
