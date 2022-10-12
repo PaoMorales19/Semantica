@@ -376,7 +376,7 @@ namespace Semantica
                 }
                 
             }
-            return 0;
+            return getValor(variable);
         }
 
         //For -> for(Asignacion Condicion; Incremento) BloqueInstruccones | Intruccion 
@@ -632,7 +632,7 @@ namespace Semantica
                 }
                 catch (Exception)
                 {
-                    throw new Error("Error de Sintaxis, no se puede asignar <" + getContenido() + "> en la linea " + linea, log);
+                    throw new Error("Error de Sintaxis, no se puede asignar <" + getContenido() + ">  linea " + linea, log);
                 }
 
             }
