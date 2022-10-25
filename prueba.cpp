@@ -11,9 +11,20 @@ int j;
 // Este programa calcula el volumen de un cilindro.
 void main()
 {
-    y = 255;
-    y++ // Error semantico
+    y = (3+5)*8-(10-4)/2;
+    if(y==61)
+    {
+        x=0;
+        if(i == 5)
+        {
+            i=0;
+        }
+        x=10;
+    }
 
+    /*y = 255;
+    y++; // Error semantico
+    
         // Requerimiento 5.- Levanta una excepcion en el scanf si la captura no es un numero
         printf("Introduce la altura de la piramide: ");
     scanf("altura", &altura);
@@ -53,5 +64,5 @@ void main()
     printf("\nValor de variable char y despues del casteo de a: ");
     printf(y);
     printf("\nA continuacion se intenta asignar un int a un char sin usar casteo: \n");
-    y = a; // Requerimiento 1.- debe marcar error
+    y = a; // Requerimiento 1.- debe marcar error*/
 }
