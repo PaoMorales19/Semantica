@@ -63,7 +63,7 @@ namespace Semantica
             asm.WriteLine(";Variables: ");
             foreach (Variable v in variables)
             {
-                asm.WriteLine("\t" + v.getNombre() + " DW ?");
+                asm.WriteLine("\t" + v.getNombre() + " DW " + v.getValor());
             }
         }
         private bool existeVariable(string nombre)
@@ -124,6 +124,7 @@ namespace Semantica
             displayVariables();
             asm.WriteLine("RET");
             asm.WriteLine("END");
+            asm.WriteLine("DEFINE_SCAN_NUM")
         }
 
         //Librerias -> #include<identificador(.h)?> Librerias?
@@ -275,7 +276,7 @@ namespace Semantica
             {
                 return Variable.TipoDato.Char;
             }
-            else if (resultado == 65536)
+            else if (resultado == 65536)//<=
             {
                 return Variable.TipoDato.Int;
             }
@@ -295,8 +296,7 @@ namespace Semantica
             {
                 throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
             }
-            log.WriteLine();
-            log.Write(getContenido() + " = ");
+            
             match(Tipos.Identificador);
             Dominante = Variable.TipoDato.Char;
             if (getClasificacion() == Tipos.IncrementoTermino || getClasificacion() == Tipos.IncrementoFactor)
@@ -306,6 +306,8 @@ namespace Semantica
             }
             else
             {
+                log.WriteLine();
+                log.Write(getContenido() + " = ");
                 match(Tipos.Asignacion);
 
                 Expresion();
@@ -588,7 +590,7 @@ namespace Semantica
             string etiquetaIf = "if" + ++cIf;
             match("if");
             match("(");
-            bool validarIf = Condicion("");//etiquetaIf
+            bool validarIf = Condicion(etiquetaIf);//etiquetaIf
             if (evaluacion == false)
             {
                 validarIf = false;
@@ -631,7 +633,6 @@ namespace Semantica
                 }
 
             }
-            cIf++;
             asm.WriteLine(etiquetaIf + ":");
         }
 
@@ -649,6 +650,7 @@ namespace Semantica
                     cadena = getContenido().Replace("\"", "").Replace("\\n", "\n").Replace("\\t", "\t");
                     Console.Write(cadena);
                 }
+                asm.WriteLine("PRINTN \""+ getContenido() + "\"")
                 match(Tipos.Cadena);
             }
             else
@@ -691,7 +693,8 @@ namespace Semantica
                 {
                     throw new Error("Error de Sintaxis, no se puede asignar <" + getContenido() + ">  linea " + linea, log);
                 }
-
+                asm.WriteLine("CALL SCAN_NUM");
+                asm.WriteLine("MOV " + getContenido()+ ", Cx");
             }
             match(Tipos.Identificador);
             match(")");
