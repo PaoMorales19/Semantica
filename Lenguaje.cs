@@ -14,7 +14,15 @@ using System;
 //                  e)Hacer que funcione el while y el do while
 //Requerimiento 3: 
 //                  a)Considerar las variables y los casteos de las expresiones matematicas en ensamblador
-//                  b)Considerar el residuo de la division en ensablador
+//                  b)Considerar el residuo de la division en ensamblador    
+//                  c)Programar el prinf y el scanf
+//Requerimiento 4: 
+//                  a)Programar el else en ensamblador
+//                  b)Programar el for en ensamblador
+//Requerimiento 5:
+//                  a)Programar el while en ensamblador
+//                  b)Programar el do while en ensamblador
+
 namespace Semantica
 {
     public class Lenguaje : Sintaxis
@@ -22,14 +30,14 @@ namespace Semantica
         List<Variable> variables = new List<Variable>();
         Stack<float> stack = new Stack<float>();
         Variable.TipoDato Dominante;
-        int cIf;
+        int cIf, cFor;
         public Lenguaje()
         {
-            cIf = 0;
+            cIf = cFor = 0;
         }
         public Lenguaje(string nombre) : base(nombre)
         {
-            cIf = 0;
+            cIf = cFor = 0;
         }
         ~Lenguaje()//Destructor
         {
@@ -420,6 +428,9 @@ namespace Semantica
         //For -> for(Asignacion Condicion; Incremento) BloqueInstruccones | Intruccion 
         private void For(bool evaluacion)
         {
+            string etiquetaInicioFor = "for" + cFor;
+            string etiquetaFinFor = "finFor" +  cFor++;
+            asm.WriteLine(etiquetaInicioFor+ ":");
             match("for");
             match("(");
             Asignacion(evaluacion);
@@ -456,6 +467,7 @@ namespace Semantica
                     modVariable(nIncremento, incremento);
                 }
             } while (ValidarFor);
+            asm.WriteLine(etiquetaFinFor+ ":");
         }
         private void setPosicion(int posicion)
         {
