@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\Semantica.csproj": {}
+    "C:\\Users\\user\\Downloads\\Semantica\\Semantica.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\Semantica.csproj": {
+    "C:\\Users\\user\\Downloads\\Semantica\\Semantica.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\Semantica.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Downloads\\Semantica\\Semantica.csproj",
         "projectName": "Semantica",
-        "projectPath": "C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\Semantica.csproj",
-        "packagesPath": "C:\\Users\\HOME\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\obj\\",
+        "projectPath": "C:\\Users\\user\\Downloads\\Semantica\\Semantica.csproj",
+        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\user\\Downloads\\Semantica\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\HOME\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"

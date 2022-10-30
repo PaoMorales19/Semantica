@@ -59,12 +59,13 @@ namespace Semantica
         };
         public Lexico()
         {
+            //C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\prueba.cpp
             linea = 1;
-            string path = "C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\prueba.cpp";
+            string path = "C:\\Users\\user\\Downloads\\Semantica\\prueba.cpp";
             bool existencia = File.Exists(path);
-            log = new StreamWriter("C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\prueba.Log");
+            log = new StreamWriter("C:\\Users\\user\\Downloads\\Semantica\\prueba.Log");
             log.AutoFlush = true;
-            asm = new StreamWriter("C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\prueba.asm");
+            asm = new StreamWriter("C:\\Users\\user\\Downloads\\Semantica\\prueba.asm");
             asm.AutoFlush = true;
 
             log.WriteLine("Archivo: prueba.cpp");
@@ -75,7 +76,7 @@ namespace Semantica
 
             if (existencia == true)
             {
-                archivo = new StreamReader("C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\prueba.cpp");
+                archivo = new StreamReader("C:\\Users\\user\\Downloads\\Semantica\\prueba.cpp");
             }
             else
             {

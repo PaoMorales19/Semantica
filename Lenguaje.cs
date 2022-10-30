@@ -1,9 +1,9 @@
 using System;
 //Ana Paola Morales Anaya
 //Requerimiento 1: Actualizacion
-//                  a) Agregar el residuo de la división en el porFactor
+//                  a) Agregar el residuo de la división en el porFactor----listo
 //                  b) Agregar en Instruccion los incrementos de termino y los incremetos de Factor
-//                      a++, a--, a+=1, a-=1, a*=1; a/=1; a%=1
+//                      a++, a--, a+=1, a-=1, a*=1; a/=1; a%=1----listo
 //                      en donde el 1 puede ser une expresion
 //                  c) Programar el destructor 
 //                  #libreria especial? contenido? en la clase lexico
@@ -124,7 +124,7 @@ namespace Semantica
             displayVariables();
             asm.WriteLine("RET");
             asm.WriteLine("END");
-            asm.WriteLine("DEFINE_SCAN_NUM")
+            asm.WriteLine("DEFINE_SCAN_NUM");
         }
 
         //Librerias -> #include<identificador(.h)?> Librerias?
@@ -276,7 +276,7 @@ namespace Semantica
             {
                 return Variable.TipoDato.Char;
             }
-            else if (resultado == 65536)//<=
+            else if (resultado <= 65536)//<= ==
             {
                 return Variable.TipoDato.Int;
             }
@@ -296,13 +296,61 @@ namespace Semantica
             {
                 throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
             }
-            
+
             match(Tipos.Identificador);
             Dominante = Variable.TipoDato.Char;
             if (getClasificacion() == Tipos.IncrementoTermino || getClasificacion() == Tipos.IncrementoFactor)
             {
                 //Requerimiento 1b)
+                //a++, a--, a+=1, a-=1, a*=1; a/=1; a%=1
+                string operaciones = getContenido();
+                string incrementoValor;
+                switch (operaciones)
+                {
+                    case "++":
+                        match("++");
+                        modVariable(nombre, getValor(nombre) + 1);
+                        break;
+                    case "--":
+                        match("--");
+                        modVariable(nombre, getValor(nombre) - 1);
+                        break;
+                    case "+=":
+                        match("+=");
+                        incrementoValor = getContenido();
+                        match(Tipos.Numero);
+                        modVariable(nombre, getValor(nombre) + float.Parse(incrementoValor));
+                        break;
+                    case "-=":
+                        match("-=");
+                        incrementoValor = getContenido();
+                        match(Tipos.Numero);
+                        modVariable(nombre, getValor(nombre) - float.Parse(incrementoValor));
+                        break;
+                    case "*=":
+                        match("*=");
+                        incrementoValor = getContenido();
+                        match(Tipos.Numero);
+                        modVariable(nombre, getValor(nombre) * float.Parse(incrementoValor));
+                        break;
+                    case "/=":
+                        match("/=");
+                        incrementoValor = getContenido();
+                        match(Tipos.Numero);
+                        modVariable(nombre, getValor(nombre) / float.Parse(incrementoValor));
+                        break;
+                    case "%=":
+                        match("%=");
+                        incrementoValor = getContenido();
+                        match(Tipos.Numero);
+                        modVariable(nombre, getValor(nombre) % float.Parse(incrementoValor));
+                        break;
+
+
+                }
+                match(";");
                 //Requerimiento 1c)
+
             }
             else
             {
@@ -410,7 +458,6 @@ namespace Semantica
                 match("++");
                 if (evaluacion)
                 {
-                    //modVariable(variable, getValor(variable) + 1);
                     return getValor(variable) + 1;
                 }
             }
@@ -419,10 +466,64 @@ namespace Semantica
                 match("--");
                 if (evaluacion)
                 {
-                    //modVariable(variable, getValor(variable) - 1);
                     return getValor(variable) - 1;
                 }
 
+            }
+            else if (getContenido() == "+=")
+            {
+                match("+=");
+                string incrementoValor = getContenido();
+                match(Tipos.Numero);
+
+                if (evaluacion)
+                {
+                    return getValor(variable) + float.Parse(incrementoValor);
+                }
+            }
+            else if (getContenido() == "-=")
+            {
+                match("-=");
+                string incrementoValor = getContenido();
+                match(Tipos.Numero);
+
+                if (evaluacion)
+                {
+                    return getValor(variable) - float.Parse(incrementoValor);
+                }
+            }
+            else if (getContenido() == "*=")
+            {
+                match("*=");
+                string incrementoValor = getContenido();
+                match(Tipos.Numero);
+
+                if (evaluacion)
+                {
+                    return getValor(variable) * float.Parse(incrementoValor);
+                }
+            }
+            else if (getContenido() == "/=")
+            {
+                match("/=");
+                string incrementoValor = getContenido();
+                match(Tipos.Numero);
+
+                if (evaluacion)
+                {
+                    return getValor(variable) / float.Parse(incrementoValor);
+                }
+            }
+            else if (getContenido() == "%=")
+            {
+                match("%=");
+                string incrementoValor = getContenido();
+                match(Tipos.Numero);
+
+                if (evaluacion)
+                {
+                    return getValor(variable) % float.Parse(incrementoValor);
+                }
             }
             return getValor(variable);
         }
@@ -431,8 +532,8 @@ namespace Semantica
         private void For(bool evaluacion)
         {
             string etiquetaInicioFor = "for" + cFor;
-            string etiquetaFinFor = "finFor" +  cFor++;
-            asm.WriteLine(etiquetaInicioFor+ ":");
+            string etiquetaFinFor = "finFor" + cFor++;
+            asm.WriteLine(etiquetaInicioFor + ":");
             match("for");
             match("(");
             Asignacion(evaluacion);
@@ -451,6 +552,7 @@ namespace Semantica
                 string nIncremento = getContenido();
                 float incremento = IncrementoDelFor(ValidarFor);
                 //Requerimiento 1d)
+
                 match(")");
                 if (getContenido() == "{")
                 {
@@ -469,7 +571,7 @@ namespace Semantica
                     modVariable(nIncremento, incremento);
                 }
             } while (ValidarFor);
-            asm.WriteLine(etiquetaFinFor+ ":");
+            asm.WriteLine(etiquetaFinFor + ":");
         }
         private void setPosicion(int posicion)
         {
@@ -650,7 +752,7 @@ namespace Semantica
                     cadena = getContenido().Replace("\"", "").Replace("\\n", "\n").Replace("\\t", "\t");
                     Console.Write(cadena);
                 }
-                asm.WriteLine("PRINTN \""+ getContenido() + "\"")
+                asm.WriteLine("PRINTN \"" + getContenido() + "\"");
                 match(Tipos.Cadena);
             }
             else
@@ -694,7 +796,7 @@ namespace Semantica
                     throw new Error("Error de Sintaxis, no se puede asignar <" + getContenido() + ">  linea " + linea, log);
                 }
                 asm.WriteLine("CALL SCAN_NUM");
-                asm.WriteLine("MOV " + getContenido()+ ", Cx");
+                asm.WriteLine("MOV " + getContenido() + ", Cx");
             }
             match(Tipos.Identificador);
             match(")");
@@ -768,6 +870,11 @@ namespace Semantica
                         stack.Push(n2 / n1);
                         asm.WriteLine("DIV BX");
                         asm.WriteLine("PUSH AX");
+                        break;
+                    case "%":
+                        stack.Push(n2 % n1);
+                        asm.WriteLine("DIV BX");
+                        asm.WriteLine("PUSH DX");
                         break;
                         //Residuo de la division queda en DX y resultado AX
                 }

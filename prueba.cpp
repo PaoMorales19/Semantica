@@ -11,17 +11,7 @@ int k,l,y;
 // Este programa calcula el volumen de un cilindro.
 void main()
 {
-    for(i = 0; i<10; i++)
-    {
-        for(j = 0; j<10; j++)
-        {
-            x = x + 1;
-            for(k = 0; k<10; k++)
-                for(l = 0; l<10; l++)
-                    y = y+2;
-        }
-    }    
-
+  
     /*y = 255;
     y++; // Error semantico
     
