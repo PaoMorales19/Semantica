@@ -7,15 +7,17 @@ int a, d, altura;
 int x;
 int i;
 int j;
-int k,l,y;
+char k,l,y;
 // Este programa calcula el volumen de un cilindro.
 void main()
 {
   
-    /*y = 255;
-    y++; // Error semantico
+    y = 255;
+    printf(y);
+    y/=2; // Error semantico
+    printf(y);
     
-        // Requerimiento 5.- Levanta una excepcion en el scanf si la captura no es un numero
+       /* // Requerimiento 5.- Levanta una excepcion en el scanf si la captura no es un numero
         printf("Introduce la altura de la piramide: ");
     scanf("altura", &altura);
     // Requerimiento 6.- Ejecutar el for y for anidado

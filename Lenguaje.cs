@@ -160,6 +160,9 @@ namespace Semantica
                     case "float":
                         tipo = Variable.TipoDato.Float;
                         break;
+                    default:
+                        tipo = Variable.TipoDato.Char;
+                        break;
                 }
                 match(Tipos.TipoDato);
                 Lista_identificadores(tipo);
@@ -272,11 +275,11 @@ namespace Semantica
             {
                 return Variable.TipoDato.Float;
             }
-            if (resultado <= 256)
+            if (resultado < 256)
             {
                 return Variable.TipoDato.Char;
             }
-            else if (resultado <= 65536)//<= ==
+            else if (resultado < 65536)//<= ==
             {
                 return Variable.TipoDato.Int;
             }
@@ -303,51 +306,7 @@ namespace Semantica
             {
                 //Requerimiento 1b)
                 //a++, a--, a+=1, a-=1, a*=1; a/=1; a%=1
-                string operaciones = getContenido();
-                string incrementoValor;
-                switch (operaciones)
-                {
-                    case "++":
-                        match("++");
-                        modVariable(nombre, getValor(nombre) + 1);
-                        break;
-                    case "--":
-                        match("--");
-                        modVariable(nombre, getValor(nombre) - 1);
-                        break;
-                    case "+=":
-                        match("+=");
-                        incrementoValor = getContenido();
-                        match(Tipos.Numero);
-                        modVariable(nombre, getValor(nombre) + float.Parse(incrementoValor));
-                        break;
-                    case "-=":
-                        match("-=");
-                        incrementoValor = getContenido();
-                        match(Tipos.Numero);
-                        modVariable(nombre, getValor(nombre) - float.Parse(incrementoValor));
-                        break;
-                    case "*=":
-                        match("*=");
-                        incrementoValor = getContenido();
-                        match(Tipos.Numero);
-                        modVariable(nombre, getValor(nombre) * float.Parse(incrementoValor));
-                        break;
-                    case "/=":
-                        match("/=");
-                        incrementoValor = getContenido();
-                        match(Tipos.Numero);
-                        modVariable(nombre, getValor(nombre) / float.Parse(incrementoValor));
-                        break;
-                    case "%=":
-                        match("%=");
-                        incrementoValor = getContenido();
-                        match(Tipos.Numero);
-                        modVariable(nombre, getValor(nombre) % float.Parse(incrementoValor));
-                        break;
-
-
-                }
+                Incremento(evaluacion, nombre);
                 match(";");
                 //Requerimiento 1c)
 
@@ -579,29 +538,113 @@ namespace Semantica
             archivo.BaseStream.Seek(posicion, SeekOrigin.Begin);
         }
         //Incremento -> Identificador ++ | --
-        private void Incremento(bool evaluacion)
+        private void Incremento(bool evaluacion, string variable)
         {
-            string variable = getContenido();
-            if (!existeVariable(getContenido()))
+            //a++, a--, a+=1, a-=1, a*=1; a/=1; a%=1
+            string incremento = getContenido();
+            float Valor;
+            switch (incremento)
             {
-                throw new Error("ERROR DE SINTAXIS: Variable no declarada <" + getContenido() + "> en linea: " + linea, log);
-            }
-            match(Tipos.Identificador);
-            if (getContenido() == "++")//le puse un +
-            {
-                match("++");
-                if (evaluacion)
-                {
-                    modVariable(variable, getValor(variable) + 1);
-                }
-            }
-            else if (getContenido() == "--")
-            {
-                match("--");
-                if (evaluacion)
-                {
-                    modVariable(variable, getValor(variable) - 1);
-                }
+                case "++":
+                    match("++");
+
+                    if (evaluacion)
+                    {
+                        if (Dominante < evaluaNumero(getValor(variable) + 1))
+                        {
+                            Dominante = evaluaNumero(getValor(variable) + 1);
+                        }
+                        if (Dominante <= getTipo(variable))
+                        {
+                            if (evaluacion)
+                            {
+                                modVariable(variable, getValor(variable) + 1);
+                            }
+                        }
+                        else
+                        {
+                            throw new Error("Error de semantica: no podemos asignar un: <" + Dominante + "> a un <" + getTipo(variable) + "> en linea  " + linea, log);
+                        }
+                    }
+                    break;
+                case "--":
+                    match("--");
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) - 1);
+                    }
+                    break;
+                case "+=":
+                    match("+=");
+                    Expresion();
+                    Valor = getValor(variable) + stack.Pop();
+                    if (evaluacion)
+                    {
+                        if (Dominante < evaluaNumero(Valor))
+                        {
+                            Dominante = evaluaNumero(Valor);
+                        }
+                        if (Dominante <= getTipo(variable))
+                        {
+                            if (evaluacion)
+                            {
+                                modVariable(variable, Valor);
+                            }
+                        }
+                        else
+                        {
+                            throw new Error("Error de semantica: no podemos asignar un: <" + Dominante + "> a un <" + getTipo(variable) + "> en linea  " + linea, log);
+                        }
+                    }
+                    break;
+                case "-=":
+                    match("-=");
+                    Expresion();
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) - stack.Pop());
+                    }
+                    break;
+                case "*=":
+                    match("*=");
+                    Expresion();
+                    Valor = getValor(variable) * stack.Pop();
+                    if (evaluacion)
+                    {
+                        if (Dominante < evaluaNumero(Valor))
+                        {
+                            Dominante = evaluaNumero(Valor);
+                        }
+                        if (Dominante <= getTipo(variable))
+                        {
+                            if (evaluacion)
+                            {
+                                modVariable(variable, Valor);
+                            }
+                        }
+                        else
+                        {
+                            throw new Error("Error de semantica: no podemos asignar un: <" + Dominante + "> a un <" + getTipo(variable) + "> en linea  " + linea, log);
+                        }
+                    }
+                    break;
+                case "/=":
+                    match("/=");
+                    Expresion();
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) / stack.Pop());
+                    }
+                    break;
+                case "%=":
+                    match("%=");
+                    Expresion();
+                    if (evaluacion)
+                    {
+                        modVariable(variable, getValor(variable) % stack.Pop());
+                    }
+                    break;
+
             }
         }
 
