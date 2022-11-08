@@ -1,19 +1,7 @@
 Archivo: prueba.cpp
-07/11/2022 05:17:09 p. m.
+07/11/2022 07:55:00 p. m.
 
-= = 255  = 255
-y 2 y 
-Variables: 
-area, Float, 0
-radio, Float, 0
-pi, Float, 0
-resultado, Float, 0
-a, Int, 0
-d, Int, 0
-altura, Int, 0
-x, Int, 0
-i, Int, 0
-j, Int, 0
-k, Char, 0
-l, Char, 0
-y, Char, 127.5
+= = 0  = 0
+
+= = 0  = 0
+y 10 y 10 y 10 y 10 y 10 y 10 y 10 y 10 y 10 y 10 y 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 Error de sintaxis1, se espera un while en linea: 68

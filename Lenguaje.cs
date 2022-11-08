@@ -9,9 +9,9 @@ using System;
 //                  #libreria especial? contenido? en la clase lexico
 //                  Para ejecutar el método cerrarArchivo
 //Requerimiento 2: Actualizacion
-//                  c) Marcar errores semanticos cuando los incrementos de termino o incrementosFactor superen el rango de la variable
-//                  d)Considerar el inciso b) y c) para el for
-//                  e)Hacer que funcione el while y el do while
+//                  a) Marcar errores semanticos cuando los incrementos de termino o incrementosFactor superen el rango de la variable---listo
+//                  b)Considerar el inciso b) y c) para el for
+//                  c)Hacer que funcione el while y el do while
 //Requerimiento 3: 
 //                  a)Considerar las variables y los casteos de las expresiones matematicas en ensamblador
 //                  b)Considerar el residuo de la division en ensamblador    
@@ -30,14 +30,14 @@ namespace Semantica
         List<Variable> variables = new List<Variable>();
         Stack<float> stack = new Stack<float>();
         Variable.TipoDato Dominante;
-        int cIf, cFor;
+        int cIf, cFor, cWhile, cDoWhile;
         public Lenguaje()
         {
-            cIf = cFor = 0;
+            cIf = cFor = cDoWhile = cWhile = 0;
         }
         public Lenguaje(string nombre) : base(nombre)
         {
-            cIf = cFor = 0;
+            cIf = cFor = cDoWhile = cWhile = 0;
         }
         ~Lenguaje()//Destructor
         {
@@ -347,60 +347,103 @@ namespace Semantica
         //While -> while(Condicion) bloque de instrucciones | instruccion
         private void While(bool evaluacion)
         {
+            string etiquetaInicioWhile = "while" + cWhile;
+            string etiquetaFinWhile = "finWhile" + cWhile++;
             match("while");
             match("(");
-            bool ValidarWhile = Condicion("");
-            if (!evaluacion)
+            bool ValidarWhile;
+            int posW = posicion - getContenido().Length;
+            int lineaW = linea;
+            do
             {
-                ValidarWhile = false;
-            }
-            match(")");
-            if (getContenido() == "{")
-            {
-                if (ValidarWhile)
+                ValidarWhile = Condicion(etiquetaFinWhile);
+                match(")");
+                if (getContenido() == "{")
                 {
-                    BloqueInstrucciones(evaluacion);
+                    if (ValidarWhile)
+                    {
+                        BloqueInstrucciones(ValidarWhile);
+                    }
+                    else
+                    {
+                        BloqueInstrucciones(false);
+                    }
+
                 }
                 else
                 {
-                    BloqueInstrucciones(false);
+                    if (ValidarWhile)
+                    {
+                        Instruccion(ValidarWhile);
+                    }
+                    else
+                    {
+                        Instruccion(false);
+                    }
+                }
+                if (ValidarWhile)
+                {
+                    posicion = posW;
+                    linea = lineaW;
+                    setPosicion(posicion);
+                    NextToken();
                 }
 
-            }
-            else
-            {
-                if (ValidarWhile)
-                {
-                    Instruccion(evaluacion);
-                }
-                else
-                {
-                    Instruccion(false);
-                }
-            }
+            } while (ValidarWhile);
         }
 
         //Do -> do bloque de instrucciones | intruccion while(Condicion)
         private void Do(bool evaluacion)
         {
+            string etiquetaInicioDoWhile = "Do" + cDoWhile;
+            string etiquetaFinDoWhile = "finDo" + cDoWhile++;
             bool ValidarDo = true;
-            if (!evaluacion)
-            {
-                ValidarDo = false;
-            }
+            int posDoW = posicion - getContenido().Length;
+            int lineaDoW = linea;
             match("do");
-            if (getContenido() == "{")
+            do
             {
-                BloqueInstrucciones(evaluacion);
-            }
-            else
-            {
-                Instruccion(evaluacion);
-            }
-            match("while");
-            match("(");
+                if (getContenido() == "{")
+                {
+                    if (ValidarDo)
+                    {
+                        BloqueInstrucciones(ValidarDo);
+                    }
+                    else
+                    {
+                        BloqueInstrucciones(false);
+                    }
+                }
+                else
+                {
+                    if (ValidarDo)
+                    {
+                        Instruccion(ValidarDo);
+                    }
+                    else
+                    {
+                        Instruccion(false);
+                    }
+                }
+                //if (getContenido() == "while")
+                //{
+                    match("while");
+                    match("(");
+                    ValidarDo = Condicion(etiquetaFinDoWhile);
+                    if (ValidarDo)
+                    {
+                        posicion = posDoW;
+                        linea = lineaDoW;
+                        setPosicion(posicion);
+                        NextToken();
+                    }
+                //}
+                //else
+                //{
+                  //  throw new Error("Error de sintaxis: se esperaba un while en linea: " + linea, log);
+                //}
 
-            ValidarDo = Condicion("");
+            }while (ValidarDo);
             match(")");
             match(";");
         }
