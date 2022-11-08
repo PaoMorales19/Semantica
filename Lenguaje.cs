@@ -426,10 +426,11 @@ namespace Semantica
             }
             string etiquetaInicioDoWhile = "Do" + cDoWhile;
             string etiquetaFinDoWhile = "finDo" + cDoWhile++;
-            bool ValidarDo = true;
-            int posDoW = posicion - getContenido().Length;
-            int lineaDoW = linea;
+            bool ValidarDo = evaluacion;
+            
             match("do");
+            int posDoW = posicion;
+            int lineaDoW = linea;
             do
             {
                 if(evaluaEnsamblador)
@@ -465,7 +466,7 @@ namespace Semantica
                     ValidarDo = Condicion(etiquetaFinDoWhile);
                     if (ValidarDo)
                     {
-                        posicion = posDoW;
+                        posicion = posDoW-1;
                         linea = lineaDoW;
                         setPosicion(posicion);
                         NextToken();
