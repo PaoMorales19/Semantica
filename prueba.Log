@@ -1,7 +1,5 @@
 Archivo: prueba.cpp
-07/11/2022 07:55:00 p. m.
+07/11/2022 09:27:06 p. m.
 
-= = 0  = 0
-
-= = 0  = 0
-y 10 y 10 y 10 y 10 y 10 y 10 y 10 y 10 y 10 y 10 y 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 l l 10 Error de sintaxis1, se espera un while en linea: 68
+= = 1  = 1
+y y 10 y y 10 y y 10 y y 10 y y 10 y y 10 y y 10 y y 10 y y 10 Error de sintaxis: se esperaba un while en linea: 60

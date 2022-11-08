@@ -1,160 +1,119 @@
 ;Archivo: Prueba.cpp
-;Fecha: 07/11/2022 07:55:00 p. m.
+;Fecha: 07/11/2022 09:27:06 p. m.
 #make_COME
 #include emu8086.inc
 ORG 1000h
 ;Variables: 
-	area DW 0
-	radio DW 0
-	pi DW 0
-	resultado DW 0
-	a DW 0
-	d DW 0
-	altura DW 0
-	x DW 0
-	i DW 0
-	j DW 0
-	k DW 0
-	l DW 0
-	y DW 0
-MOV AX, 0
+	area dd ?
+	radio dd ?
+	pi dd ?
+	resultado dd ?
+	a dw ?
+	d dw ?
+	altura dw ?
+	x dw ?
+	i dw ?
+	j dw ?
+	k dw ?
+	l dw ?
+	y dw ?
+MOV AX, 1
 PUSH AX
 POP AX
 MOV y, AX 
-MOV AX, 0
+MOV AX, y
 PUSH AX
 POP AX
-MOV l, AX 
-MOV AX, 10
+MOV AX, y
 PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finWhile0
-POP AX
-MOV AX, 10
-PUSH AX
-POP AX
-POP BX
-CMP AX, BX
-JGE finDo0
-POP AX
 MOV AX, 10
 PUSH AX
 POP AX
 POP BX
 CMP AX, BX
 JGE finDo1
+MOV AX, y
+PUSH AX
 POP AX
+MOV AX, y
+PUSH AX
 MOV AX, 10
 PUSH AX
 POP AX
 POP BX
 CMP AX, BX
 JGE finDo2
+MOV AX, y
+PUSH AX
 POP AX
+MOV AX, y
+PUSH AX
 MOV AX, 10
 PUSH AX
 POP AX
 POP BX
 CMP AX, BX
 JGE finDo3
+MOV AX, y
+PUSH AX
 POP AX
+MOV AX, y
+PUSH AX
 MOV AX, 10
 PUSH AX
 POP AX
 POP BX
 CMP AX, BX
 JGE finDo4
+MOV AX, y
+PUSH AX
 POP AX
+MOV AX, y
+PUSH AX
 MOV AX, 10
 PUSH AX
 POP AX
 POP BX
 CMP AX, BX
 JGE finDo5
+MOV AX, y
+PUSH AX
 POP AX
+MOV AX, y
+PUSH AX
 MOV AX, 10
 PUSH AX
 POP AX
 POP BX
 CMP AX, BX
 JGE finDo6
+MOV AX, y
+PUSH AX
 POP AX
+MOV AX, y
+PUSH AX
 MOV AX, 10
 PUSH AX
 POP AX
 POP BX
 CMP AX, BX
 JGE finDo7
+MOV AX, y
+PUSH AX
 POP AX
+MOV AX, y
+PUSH AX
 MOV AX, 10
 PUSH AX
 POP AX
 POP BX
 CMP AX, BX
 JGE finDo8
+MOV AX, y
+PUSH AX
 POP AX
+MOV AX, y
+PUSH AX
 MOV AX, 10
 PUSH AX
 POP AX
