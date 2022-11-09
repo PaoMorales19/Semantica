@@ -35,7 +35,9 @@ namespace Semantica
         string CAsm = "";
         public void Dispose()
         {
+             cerrar();
             Console.WriteLine("Si funciona el destructor");
+           
         }
         public Lenguaje()
         {
@@ -136,13 +138,16 @@ namespace Semantica
             asm.WriteLine("ORG 100h");
             Libreria();
             Variables();
-            VariablesASM();
+           
             Main();
             displayVariables();
+             VariablesASM();
+             
             asm.WriteLine("RET");
-            asm.WriteLine("DEFINE_SCAN_NUM");
+            
             asm.WriteLine("DEFINE_PRINT_NUM");
             asm.WriteLine("DEFINE_PRINT_NUM_UNS");
+            asm.WriteLine("DEFINE_SCAN_NUM");
             asm.WriteLine("END");
 
         }
@@ -328,6 +333,11 @@ namespace Semantica
                 //a++, a--, a+=1, a-=1, a*=1; a/=1; a%=1
                 Incremento(evaluacion, nombre, evaluaEnsamblador);
                 match(";");
+                if(evaluaEnsamblador)
+                {
+                   asm.WriteLine("MOV AX, " + nombre);
+                    asm.WriteLine("MOV " + nombre + ", AX");
+                }
                 //Requerimiento 1c)
 
             }
@@ -340,7 +350,11 @@ namespace Semantica
                 Expresion(evaluaEnsamblador);
                 match(";");
                 float resultado = stack.Pop();
-                asm.WriteLine("POP AX");
+                if (evaluaEnsamblador)
+                {
+                    asm.WriteLine("POP AX");
+                }
+
                 log.Write(" = " + resultado);
                 log.WriteLine();
                 if (Dominante < evaluaNumero(resultado))
@@ -362,7 +376,7 @@ namespace Semantica
                 {
                     asm.WriteLine("MOV " + nombre + ", AX");
                 }
-                
+
             }
 
             // modVariable(nombre, resultado);
@@ -438,7 +452,7 @@ namespace Semantica
                 cDoWhile++;
             }
             string etiquetaInicioDoWhile = "Do" + cDoWhile;
-            string etiquetaFinDoWhile = "finDo" + cDoWhile++;
+            string etiquetaFinDoWhile = "finDo" + cDoWhile;
             bool ValidarDo = evaluacion;
 
             match("do");
@@ -449,6 +463,7 @@ namespace Semantica
                 if (evaluaEnsamblador)
                 {
                     asm.WriteLine(etiquetaInicioDoWhile + " :");
+                    asm.WriteLine(";hola");
                 }
                 if (getContenido() == "{")
                 {
@@ -795,7 +810,11 @@ namespace Semantica
             match("(");
             Expresion(evaluaEnsamblador);
             stack.Pop();
-            asm.WriteLine("POP AX");
+            if (evaluaEnsamblador)
+            {
+                asm.WriteLine("POP AX");
+            }
+
             match(")");
             match("{");
             ListaDeCasos(evaluacion, evaluaEnsamblador);
@@ -820,7 +839,11 @@ namespace Semantica
             match("case");
             Expresion(evaluaEnsamblador);
             stack.Pop();
-            asm.WriteLine("POP AX");
+            if (evaluaEnsamblador)
+            {
+                asm.WriteLine("POP AX");
+
+            }
             match(":");
             ListaInstruccionesCase(evaluacion, evaluaEnsamblador);
             if (getContenido() == "break")
@@ -845,10 +868,16 @@ namespace Semantica
             if (evaluaEnsamblador)
             {
                 asm.WriteLine("POP BX");
+
+            }
+            float e1 = stack.Pop();
+            if (evaluaEnsamblador)
+            {
+
                 asm.WriteLine("POP AX");
                 asm.WriteLine("CMP AX, BX");
             }
-            float e1 = stack.Pop();
+
             switch (operador)
             {
                 case "==":
@@ -881,7 +910,13 @@ namespace Semantica
         //If -> if(Condicion) bloque de instrucciones (else bloque de instrucciones)?
         private void If(bool evaluacion, bool evaluaEnsamblador)
         {
+            if (evaluaEnsamblador)
+            {
+                cIf++;
+            }
             string etiquetaIf = "if" + ++cIf;
+            string etiquetaElse = "else" + cIf;
+            
             match("if");
             match("(");
             bool validarIf = Condicion(etiquetaIf, evaluaEnsamblador);//etiquetaIf
@@ -898,6 +933,11 @@ namespace Semantica
             else
             {
                 Instruccion(validarIf, evaluaEnsamblador);
+            }
+            if(evaluaEnsamblador)
+            {
+                asm.WriteLine("JMP " + etiquetaElse);
+                asm.WriteLine(etiquetaIf + ":");
             }
             if (getContenido() == "else")
             {
@@ -927,7 +967,10 @@ namespace Semantica
                 }
 
             }
-            asm.WriteLine(etiquetaIf + ":");
+            if(evaluaEnsamblador)
+            {
+                asm.WriteLine(etiquetaElse + ":");
+            }
         }
         public void SaltosEnsamblador(string cadena)
         {
@@ -969,7 +1012,15 @@ namespace Semantica
                 }
                 if (evaluaEnsamblador)
                 {
-                    SaltosEnsamblador(cadena);
+                    if(cadena.Contains("\\n"))
+                    {
+                        SaltosEnsamblador(cadena);
+                    }
+                    else
+                    {
+                        asm.WriteLine("PRINT \"" + cadena + "\"");
+                    }
+                   
                 }
 
                 //asm.WriteLine("PRINTN \"" + getContenido() + "\"");
@@ -983,7 +1034,6 @@ namespace Semantica
                 if (evaluacion)
                 {
                     Console.Write(resultado);
-
                 }
                 if (evaluaEnsamblador)
                 {
@@ -1102,18 +1152,30 @@ namespace Semantica
                 {
                     case "*":
                         stack.Push(n2 * n1);
-                        asm.WriteLine("MUL BX");
-                        asm.WriteLine("PUSH AX");
+                        if (evaluaEnsamblador)
+                        {
+                            asm.WriteLine("MUL BX");
+                            asm.WriteLine("PUSH AX");
+                        }
+
                         break;
                     case "/":
                         stack.Push(n2 / n1);
-                        asm.WriteLine("DIV BX");
-                        asm.WriteLine("PUSH AX");
+                        if (evaluaEnsamblador)
+                        {
+                            asm.WriteLine("DIV BX");
+                            asm.WriteLine("PUSH AX");
+                        }
+
                         break;
                     case "%":
                         stack.Push(n2 % n1);
-                        asm.WriteLine("DIV BX");
-                        asm.WriteLine("PUSH DX");
+                        if (evaluaEnsamblador)
+                        {
+                            asm.WriteLine("DIV BX");
+                            asm.WriteLine("PUSH DX");
+                        }
+
                         break;
                         //Residuo de la division queda en DX y resultado AX
                 }
@@ -1202,9 +1264,13 @@ namespace Semantica
                 {
                     float N1;
                     N1 = stack.Pop();
-                    asm.WriteLine("POP AX");
+                    if (evaluaEnsamblador)
+                    {
+                        asm.WriteLine("POP AX");
+                    }
                     stack.Push(ValorCasteado(N1, casteo));
                     Dominante = casteo;
+
                 }
             }
         }
