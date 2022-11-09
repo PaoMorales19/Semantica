@@ -7,19 +7,18 @@ namespace Semantica
     {
         static void Main(string[] args)
         {
-            try
+            using (Lenguaje a = new Lenguaje())
             {
-                Lenguaje a = new Lenguaje();//C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 1\\Evalua\\prueba.cpp"
-                a.Programa();
-                /*while(!a.FinArchivo())
+                try
                 {
-                    a.NextToken();
-                }*/
-                a.cerrar();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
+                    a.Programa();
+
+                    //a.cerrar();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
             }
         }
     }
