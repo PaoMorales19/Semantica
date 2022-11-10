@@ -18,11 +18,11 @@ using System.Collections.Generic;
 //                  b)Considerar el residuo de la division en ensamblador    
 //                  c)Programar el prinf y el scanf
 //Requerimiento 4: 
-//                  a)Programar el else en ensamblador
+//                  a)Programar el else en ensamblador---listo
 //                  b)Programar el for en ensamblador
 //Requerimiento 5:
-//                  a)Programar el while en ensamblador
-//                  b)Programar el do while en ensamblador
+//                  a)Programar el while en ensamblador---listo
+//                  b)Programar el do while en ensamblador---listo
 
 namespace Semantica
 {
@@ -32,7 +32,7 @@ namespace Semantica
         Stack<float> stack = new Stack<float>();
         Variable.TipoDato Dominante;
         int cIf, cFor, cWhile, cDoWhile;
-        string CAsm = "";
+        string IFor;
         public void Dispose()
         {
              cerrar();
@@ -513,20 +513,28 @@ namespace Semantica
         }
         private float IncrementoDelFor(bool evaluacion, string variable, bool evaluaEnsamblador)
         {
-            //string variable = getContenido();
 
             match(Tipos.Identificador);
             if (getContenido() == "++")//le puse un +
             {
                 match("++");
+                if(evaluaEnsamblador)
+                {
+                    IFor = "INC "+ variable;
+                }
                 if (evaluacion)
                 {
                     return getValor(variable) + 1;
                 }
+                
             }
             else if (getContenido() == "--")
             {
                 match("--");
+                if(evaluaEnsamblador)
+                {
+                    IFor = "DEC "+ variable;
+                }
                 if (evaluacion)
                 {
                     return getValor(variable) - 1;
@@ -537,6 +545,10 @@ namespace Semantica
             {
                 match("+=");
                 string incrementoValor = getContenido();
+                if(evaluaEnsamblador)
+                {
+                    IFor = "ADD "+ variable + ", " + incrementoValor;
+                }
                 match(Tipos.Numero);
 
                 if (evaluacion)
@@ -548,6 +560,10 @@ namespace Semantica
             {
                 match("-=");
                 string incrementoValor = getContenido();
+                if(evaluaEnsamblador)
+                {
+                    IFor = "SUB "+ variable + ", " + incrementoValor;
+                }
                 match(Tipos.Numero);
 
                 if (evaluacion)
@@ -559,6 +575,10 @@ namespace Semantica
             {
                 match("*=");
                 string incrementoValor = getContenido();
+                if(evaluaEnsamblador)
+                {
+                    IFor = "MUL "+ variable + ", " + incrementoValor;
+                }
                 match(Tipos.Numero);
 
                 if (evaluacion)
@@ -570,6 +590,10 @@ namespace Semantica
             {
                 match("/=");
                 string incrementoValor = getContenido();
+                if(evaluaEnsamblador)
+                {
+                    IFor = "DIV "+ variable + ", " + incrementoValor;
+                }
                 match(Tipos.Numero);
 
                 if (evaluacion)
@@ -581,8 +605,12 @@ namespace Semantica
             {
                 match("%=");
                 string incrementoValor = getContenido();
+                if(evaluaEnsamblador)
+                {
+                    IFor = "MOD "+ variable + ", " + incrementoValor;
+                   
+                }
                 match(Tipos.Numero);
-
                 if (evaluacion)
                 {
                     return getValor(variable) % float.Parse(incrementoValor);
@@ -610,7 +638,7 @@ namespace Semantica
             int lineaG = linea;
             int tamano = getContenido().Length;
             float ValorDelFor = getValor(nIncremento);
-            float Incremento;
+          
             do
             {
                 if (evaluaEnsamblador)
@@ -623,12 +651,8 @@ namespace Semantica
                 {
                     ValidarFor = false;
                 }
-                match(Tipos.Identificador);
-
-
                 float incremento = IncrementoDelFor(ValidarFor, nIncremento, evaluaEnsamblador);
-                //Requerimiento 1d)
-
+                
                 match(")");
                 if (getContenido() == "{")
                 {
@@ -650,11 +674,14 @@ namespace Semantica
                     ValorDelFor = getValor(nIncremento);
                     setPosicion(posicion);
                     NextToken();
-
                 }
                 if (evaluaEnsamblador)
                 {
-                    asm.WriteLine(CAsm);
+                    asm.WriteLine(IFor);
+                }
+                if (evaluaEnsamblador)
+                {
+                    //asm.WriteLine(CAsm);
                     asm.WriteLine("JMP " + etiquetaInicioFor);
                     asm.WriteLine(etiquetaFinFor + ":");
                 }
@@ -760,6 +787,12 @@ namespace Semantica
                     match("*=");
                     Expresion(evaluaEnsamblador);
                     Valor = getValor(variable) * stack.Pop();
+                    if (evaluaEnsamblador)
+                    {
+                        asm.WriteLine("MOV AX, " + variable);
+                        asm.WriteLine("MUL AX, " + stack.Pop());
+                        asm.WriteLine("MOV " + variable + ", AX");
+                    }
                     if (evaluacion)
                     {
                         if (Dominante < evaluaNumero(Valor))
@@ -782,6 +815,12 @@ namespace Semantica
                 case "/=":
                     match("/=");
                     Expresion(evaluaEnsamblador);
+                    if(evaluaEnsamblador)
+                    {
+                        asm.WriteLine("MOV AX, " + variable);
+                        asm.WriteLine("DIV AX, " + stack.Pop());
+                        asm.WriteLine("MOV " + variable + ", AX");
+                    }
                     if (evaluacion)
                     {
                         modVariable(variable, getValor(variable) / stack.Pop());
@@ -790,6 +829,12 @@ namespace Semantica
                 case "%=":
                     match("%=");
                     Expresion(evaluaEnsamblador);
+                    if(evaluaEnsamblador)
+                    {
+                        asm.WriteLine("MOV AX, " + variable);
+                        asm.WriteLine("MOD AX, " + stack.Pop());
+                        asm.WriteLine("MOV " + variable + ", AX");
+                    }
                     if (evaluacion)
                     {
                         modVariable(variable, getValor(variable) % stack.Pop());
