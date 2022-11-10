@@ -16,10 +16,10 @@ using System.Collections.Generic;
 //Requerimiento 3: 
 //                  a)Considerar las variables y los casteos de las expresiones matematicas en ensamblador
 //                  b)Considerar el residuo de la division en ensamblador    
-//                  c)Programar el prinf y el scanf
+//                  c)Programar el prinf y el scanf---ya listo
 //Requerimiento 4: 
 //                  a)Programar el else en ensamblador---listo
-//                  b)Programar el for en ensamblador
+//                  b)Programar el for en ensamblador--casi listo
 //Requerimiento 5:
 //                  a)Programar el while en ensamblador---listo
 //                  b)Programar el do while en ensamblador---listo
@@ -35,9 +35,9 @@ namespace Semantica
         string IFor;
         public void Dispose()
         {
-             cerrar();
+            cerrar();
             Console.WriteLine("Si funciona el destructor");
-           
+
         }
         public Lenguaje()
         {
@@ -138,13 +138,13 @@ namespace Semantica
             asm.WriteLine("ORG 100h");
             Libreria();
             Variables();
-           
+
             Main();
             displayVariables();
-             VariablesASM();
-             
+            VariablesASM();
+
             asm.WriteLine("RET");
-            
+
             asm.WriteLine("DEFINE_PRINT_NUM");
             asm.WriteLine("DEFINE_PRINT_NUM_UNS");
             asm.WriteLine("DEFINE_SCAN_NUM");
@@ -333,7 +333,7 @@ namespace Semantica
                 //a++, a--, a+=1, a-=1, a*=1; a/=1; a%=1
                 Incremento(evaluacion, nombre, evaluaEnsamblador);
                 match(";");
-                
+
                 //Requerimiento 1c)
 
             }
@@ -518,22 +518,22 @@ namespace Semantica
             if (getContenido() == "++")//le puse un +
             {
                 match("++");
-                if(evaluaEnsamblador)
+                if (evaluaEnsamblador)
                 {
-                    IFor = "INC "+ variable;
+                    IFor = "INC " + variable;
                 }
                 if (evaluacion)
                 {
                     return getValor(variable) + 1;
                 }
-                
+
             }
             else if (getContenido() == "--")
             {
                 match("--");
-                if(evaluaEnsamblador)
+                if (evaluaEnsamblador)
                 {
-                    IFor = "DEC "+ variable;
+                    IFor = "DEC " + variable;
                 }
                 if (evaluacion)
                 {
@@ -545,9 +545,9 @@ namespace Semantica
             {
                 match("+=");
                 string incrementoValor = getContenido();
-                if(evaluaEnsamblador)
+                if (evaluaEnsamblador)
                 {
-                    IFor = "ADD "+ variable + ", " + incrementoValor;
+                    IFor = "ADD " + variable + ", " + incrementoValor;
                 }
                 match(Tipos.Numero);
 
@@ -560,9 +560,9 @@ namespace Semantica
             {
                 match("-=");
                 string incrementoValor = getContenido();
-                if(evaluaEnsamblador)
+                if (evaluaEnsamblador)
                 {
-                    IFor = "SUB "+ variable + ", " + incrementoValor;
+                    IFor = "SUB " + variable + ", " + incrementoValor;
                 }
                 match(Tipos.Numero);
 
@@ -571,13 +571,16 @@ namespace Semantica
                     return getValor(variable) - float.Parse(incrementoValor);
                 }
             }
-            else if (getContenido() == "*=")
+            else if (getContenido() == "*=")//aqui
             {
                 match("*=");
                 string incrementoValor = getContenido();
-                if(evaluaEnsamblador)
+                if (evaluaEnsamblador)
                 {
-                    IFor = "MUL "+ variable + ", " + incrementoValor;
+
+                    IFor += "\nMOV BX, " + variable;
+                    IFor += "\nMUL BX ";
+                    IFor += "\nMOV " + variable + ", AX";
                 }
                 match(Tipos.Numero);
 
@@ -590,9 +593,11 @@ namespace Semantica
             {
                 match("/=");
                 string incrementoValor = getContenido();
-                if(evaluaEnsamblador)
+                if (evaluaEnsamblador)
                 {
-                    IFor = "DIV "+ variable + ", " + incrementoValor;
+                    IFor += "\nMOV AX, " + variable;
+                    IFor += "\nDIV BX ";
+                    IFor += "\nMOV " + variable + ", AX";
                 }
                 match(Tipos.Numero);
 
@@ -605,10 +610,11 @@ namespace Semantica
             {
                 match("%=");
                 string incrementoValor = getContenido();
-                if(evaluaEnsamblador)
+                if (evaluaEnsamblador)
                 {
-                    IFor = "MOD "+ variable + ", " + incrementoValor;
-                   
+                    IFor += "\nMOV AX, " + variable;
+                    IFor += "\nDIV BX ";
+                    IFor += "\nMOV " + variable + ", DX";
                 }
                 match(Tipos.Numero);
                 if (evaluacion)
@@ -638,7 +644,7 @@ namespace Semantica
             int lineaG = linea;
             int tamano = getContenido().Length;
             float ValorDelFor = getValor(nIncremento);
-          
+
             do
             {
                 if (evaluaEnsamblador)
@@ -652,7 +658,7 @@ namespace Semantica
                     ValidarFor = false;
                 }
                 float incremento = IncrementoDelFor(ValidarFor, nIncremento, evaluaEnsamblador);
-                
+
                 match(")");
                 if (getContenido() == "{")
                 {
@@ -699,6 +705,7 @@ namespace Semantica
         {
             //a++, a--, a+=1, a-=1, a*=1; a/=1; a%=1
             float VQueSeVaAIncrementar = getValor(variable);
+
             string incremento = getContenido();
             float Valor;
             switch (incremento)
@@ -743,12 +750,12 @@ namespace Semantica
                 case "+=":
                     match("+=");
                     Expresion(evaluaEnsamblador);
-                    Valor = getValor(variable) + stack.Pop();
+                    Valor = stack.Pop();
                     if (evaluaEnsamblador)
                     {
-                        asm.WriteLine("MOV AX, " + variable);
-                        asm.WriteLine("ADD AX, " + stack.Pop());
-                        asm.WriteLine("MOV " + variable + ", AX");
+                        asm.WriteLine("MOV BX, " + variable);
+                        asm.WriteLine("ADD BX, AX");
+                        asm.WriteLine("MOV " + variable + ", BX");
                     }
                     if (evaluacion)
                     {
@@ -760,7 +767,8 @@ namespace Semantica
                         {
                             if (evaluacion)
                             {
-                                modVariable(variable, Valor);
+                                modVariable(variable, VQueSeVaAIncrementar += Valor);
+
                             }
                         }
                         else
@@ -772,25 +780,26 @@ namespace Semantica
                 case "-=":
                     match("-=");
                     Expresion(evaluaEnsamblador);
+                    Valor = stack.Pop();
                     if (evaluaEnsamblador)
                     {
-                        asm.WriteLine("MOV AX, " + variable);
-                        asm.WriteLine("SUB AX, " + stack.Pop());
-                        asm.WriteLine("MOV " + variable + ", AX");
+                        asm.WriteLine("MOV BX, " + variable);
+                        asm.WriteLine("SUB BX, AX");
+                        asm.WriteLine("MOV " + variable + ", BX");
                     }
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) - stack.Pop());
+                        modVariable(variable, VQueSeVaAIncrementar -= Valor);
                     }
                     break;
                 case "*=":
                     match("*=");
                     Expresion(evaluaEnsamblador);
-                    Valor = getValor(variable) * stack.Pop();
+                    Valor = stack.Pop();
                     if (evaluaEnsamblador)
                     {
-                        asm.WriteLine("MOV AX, " + variable);
-                        asm.WriteLine("MUL AX, " + stack.Pop());
+                        asm.WriteLine("MOV BX, " + variable);
+                        asm.WriteLine("MUL BX");
                         asm.WriteLine("MOV " + variable + ", AX");
                     }
                     if (evaluacion)
@@ -803,7 +812,7 @@ namespace Semantica
                         {
                             if (evaluacion)
                             {
-                                modVariable(variable, Valor);
+                                modVariable(variable, VQueSeVaAIncrementar *= Valor);
                             }
                         }
                         else
@@ -812,32 +821,34 @@ namespace Semantica
                         }
                     }
                     break;
-                case "/=":
+                case "/="://Aun falta
                     match("/=");
                     Expresion(evaluaEnsamblador);
-                    if(evaluaEnsamblador)
+                    Valor = stack.Pop();
+                    if (evaluaEnsamblador)
                     {
                         asm.WriteLine("MOV AX, " + variable);
-                        asm.WriteLine("DIV AX, " + stack.Pop());
+                        asm.WriteLine("DIV BX ");
                         asm.WriteLine("MOV " + variable + ", AX");
                     }
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) / stack.Pop());
+                        modVariable(variable, VQueSeVaAIncrementar /= Valor);
                     }
                     break;
-                case "%=":
+                case "%="://Aun falta
                     match("%=");
                     Expresion(evaluaEnsamblador);
-                    if(evaluaEnsamblador)
+                    Valor = stack.Pop();
+                    if (evaluaEnsamblador)
                     {
                         asm.WriteLine("MOV AX, " + variable);
-                        asm.WriteLine("MOD AX, " + stack.Pop());
-                        asm.WriteLine("MOV " + variable + ", AX");
+                        asm.WriteLine("DIV BX ");
+                        asm.WriteLine("MOV " + variable + ", DX");
                     }
                     if (evaluacion)
                     {
-                        modVariable(variable, getValor(variable) % stack.Pop());
+                        modVariable(variable, VQueSeVaAIncrementar %= Valor);
                     }
                     break;
 
@@ -957,7 +968,7 @@ namespace Semantica
             }
             string etiquetaIf = "if" + ++cIf;
             string etiquetaElse = "else" + cIf;
-            
+
             match("if");
             match("(");
             bool validarIf = Condicion(etiquetaIf, evaluaEnsamblador);//etiquetaIf
@@ -975,7 +986,7 @@ namespace Semantica
             {
                 Instruccion(validarIf, evaluaEnsamblador);
             }
-            if(evaluaEnsamblador)
+            if (evaluaEnsamblador)
             {
                 asm.WriteLine("JMP " + etiquetaElse);
                 asm.WriteLine(etiquetaIf + ":");
@@ -1008,7 +1019,7 @@ namespace Semantica
                 }
 
             }
-            if(evaluaEnsamblador)
+            if (evaluaEnsamblador)
             {
                 asm.WriteLine(etiquetaElse + ":");
             }
@@ -1017,39 +1028,35 @@ namespace Semantica
         {
             string[] saltos = cadena.Split("\\n");
 
-            int i = 0;
 
-            foreach (string s in saltos)
+            for(int i=0; i<saltos.Length; i++)
             {
-                if (i == saltos.Length - 1)
+                if(i == saltos.Length-1)
                 {
-                    asm.WriteLine("PRINT \"" + s + "\"");
-
+                    asm.WriteLine("PRINT \""+ saltos[i] +"\"");
                 }
                 else
                 {
-                    asm.WriteLine("PRINTN \"" + s + "\"");
-
+                    asm.WriteLine("PRINTN \""+ saltos[i] +"\"");
                 }
-                i++;
             }
         }
         //Printf -> printf(cadena);
         private void Printf(bool evaluacion, bool evaluaEnsamblador)
         {
-            string CadenaAsm = "";
+           
             string cadena;
             match("printf");
             match("(");
             if (getClasificacion() == Tipos.Cadena)
             {
-                cadena = getContenido().Replace("\"", "").Replace("\\n", "\n").Replace("\\t", "\t");
+                cadena = getContenido().Replace("\"", "").Replace("\\t", "\t");
 
                 if (evaluacion)
                 {
                     //string cadena;
                     //cadena = getContenido().Replace("\"", "").Replace("\\n", "\n").Replace("\\t", "\t");
-                    Console.Write(cadena);
+                    Console.Write(cadena.Replace("\\n", "\n"));
                 }
                 if (evaluaEnsamblador)
                 {
@@ -1061,7 +1068,6 @@ namespace Semantica
                     {
                         asm.WriteLine("PRINT \"" + cadena + "\"");
                     }
-                   
                 }
 
                 //asm.WriteLine("PRINTN \"" + getContenido() + "\"");

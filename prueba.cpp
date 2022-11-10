@@ -8,11 +8,8 @@ float x;
 char y; int i ;int j, k;
 // Este programa calcula el volumen de un cilindro.
 void main(){
-   i=8;
-   printf(i);
-   i%=2;
-printf(i);
-    /*Requerimiento 5.- Levanta una excepcion en el scanf si la captura no es un numero
+  
+    //Requerimiento 5.- Levanta una excepcion en el scanf si la captura no es un numero
     printf("Introduce la altura de la piramide: ");
     scanf("altura", &altura);
     //Requerimiento 6.- Ejecutar el for y for anidado
