@@ -333,11 +333,7 @@ namespace Semantica
                 //a++, a--, a+=1, a-=1, a*=1; a/=1; a%=1
                 Incremento(evaluacion, nombre, evaluaEnsamblador);
                 match(";");
-                if(evaluaEnsamblador)
-                {
-                   asm.WriteLine("MOV AX, " + nombre);
-                    asm.WriteLine("MOV " + nombre + ", AX");
-                }
+                
                 //Requerimiento 1c)
 
             }
@@ -400,7 +396,7 @@ namespace Semantica
             {
                 if (evaluaEnsamblador)
                 {
-                    asm.WriteLine(etiquetaInicioWhile + " :");
+                    asm.WriteLine(etiquetaInicioWhile + ":");
                 }
                 ValidarWhile = Condicion(etiquetaFinWhile, evaluaEnsamblador);
                 match(")");
@@ -462,7 +458,7 @@ namespace Semantica
             {
                 if (evaluaEnsamblador)
                 {
-                    asm.WriteLine(etiquetaInicioDoWhile + " :");
+                    asm.WriteLine(etiquetaInicioDoWhile + ":");
                     asm.WriteLine(";hola");
                 }
                 if (getContenido() == "{")
