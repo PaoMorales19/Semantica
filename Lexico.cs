@@ -61,11 +61,11 @@ namespace Semantica
         {
             //C:\\Users\\HOME\\Documents\\PAOLA TAREAS\\5TO SEMESTRE\\AUTOMATAS II\\UNIDAD 2\\Semantica\\prueba.cpp
             linea = 1;
-            string path = "C:\\Users\\user\\Downloads\\Semantica\\prueba.cpp";
+            string path = "prueba.cpp";
             bool existencia = File.Exists(path);
-            log = new StreamWriter("C:\\Users\\user\\Downloads\\Semantica\\prueba.Log");
+            log = new StreamWriter("prueba.Log");
             log.AutoFlush = true;
-            asm = new StreamWriter("C:\\Users\\user\\Downloads\\Semantica\\prueba.asm");
+            asm = new StreamWriter("prueba.asm");
             asm.AutoFlush = true;
 
             log.WriteLine("Archivo: prueba.cpp");
@@ -76,7 +76,7 @@ namespace Semantica
 
             if (existencia == true)
             {
-                archivo = new StreamReader("C:\\Users\\user\\Downloads\\Semantica\\prueba.cpp");
+                archivo = new StreamReader(path);
             }
             else
             {

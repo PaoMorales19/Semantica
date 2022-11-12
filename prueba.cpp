@@ -16,7 +16,9 @@ void main(){
     if(altura >2) {
         for(i = altura; i > 0; i-=1){
             j = 0; 
+            //printf("*");
             while(j < altura-i){
+                //printf("*");
                 if(j%2 == 0){
                     printf("*");
                 }
@@ -42,7 +44,7 @@ void main(){
             printf("Esto tampoco");     //Requerimiento 4.- evalua nuevamente los if respecto al parametro que reciben
         }
     }
-    a = 258;
+   /* a = 258;
     printf("Valor de variable int 'a' antes del casteo: ");
     printf(a);
     y = (char)(a);  //Requerimiento 2 y 3, actualiza el dominante y convierte el valor con una funcion
