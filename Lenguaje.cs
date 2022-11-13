@@ -37,7 +37,6 @@ namespace Semantica
         {
             cerrar();
             Console.WriteLine("Si funciona el destructor");
-
         }
         public Lenguaje()
         {
@@ -73,7 +72,7 @@ namespace Semantica
             asm.WriteLine(";Variables: ");
             foreach (Variable v in variables)
             {
-                asm.WriteLine("\t" + v.getNombre() + "DW ?");
+                asm.WriteLine("\t" + v.getNombre() + " DW ?");
             }
         }
         private bool existeVariable(string nombre)
@@ -400,9 +399,9 @@ namespace Semantica
                     }
                     else
                     {
-                        BloqueInstrucciones(false, false);
+                        BloqueInstrucciones(false, evaluaEnsamblador);
                     }
-
+                    //BloqueInstrucciones(ValidarWhile, evaluaEnsamblador);
                 }
                 else
                 {
@@ -412,8 +411,10 @@ namespace Semantica
                     }
                     else
                     {
-                        Instruccion(false, false);
+                        Instruccion(false, evaluaEnsamblador);
                     }
+                    //Instruccion(ValidarWhile, evaluaEnsamblador);
+
                 }
                 if (ValidarWhile)
                 {
@@ -462,7 +463,7 @@ namespace Semantica
                     }
                     else
                     {
-                        BloqueInstrucciones(false, false);
+                        BloqueInstrucciones(false, evaluaEnsamblador);
                     }
                 }
                 else
@@ -473,7 +474,7 @@ namespace Semantica
                     }
                     else
                     {
-                        Instruccion(false, false);
+                        Instruccion(false, evaluaEnsamblador);
                     }
                 }
                 if (getContenido() == "while")
@@ -1359,7 +1360,11 @@ namespace Semantica
                     }
                     stack.Push(ValorCasteado(N1, casteo));
                     Dominante = casteo;
-
+                    if (evaluaEnsamblador)
+                    {
+                        asm.WriteLine("MOV AX, " + ValorCasteado(N1, casteo));
+                        asm.WriteLine("PUSH AX");
+                    }
                 }
             }
         }
